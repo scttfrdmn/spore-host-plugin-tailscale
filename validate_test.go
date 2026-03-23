@@ -24,11 +24,11 @@ type pluginSpec struct {
 		Deprovision []step `yaml:"deprovision"`
 	} `yaml:"local"`
 	Remote struct {
-		Install   []step  `yaml:"install"`
-		Configure []step  `yaml:"configure"`
-		Start     []step  `yaml:"start"`
-		Stop      []step  `yaml:"stop"`
-		Health    health  `yaml:"health"`
+		Install   []step `yaml:"install"`
+		Configure []step `yaml:"configure"`
+		Start     []step `yaml:"start"`
+		Stop      []step `yaml:"stop"`
+		Health    health `yaml:"health"`
 	} `yaml:"remote"`
 }
 
