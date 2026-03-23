@@ -1,0 +1,49 @@
+name: tailscale
+version: "1.0.0"
+description: "Connects the spore to a Tailscale network as an ephemeral node."
+
+config:
+  auth_key:
+    required: true
+    type: string
+  accept_dns:
+    default: "false"
+    type: string
+
+conditions:
+  remote:
+    - type: platform
+      os: linux
+      message: "Tailscale plugin requires Linux"
+
+remote:
+  install:
+    - type: run
+      run: |
+        curl -fsSL https://tailscale.com/install.sh | sh
+    - type: run
+      run: |
+        systemctl enable --now tailscaled
+
+  configure:
+    - type: run
+      run: |
+        tailscale up \
+          --authkey={{ config.auth_key }} \
+          --hostname={{ instance.name }} \
+          --ephemeral \
+          --accept-dns={{ config.accept_dns }}
+
+  start:
+    - type: run
+      run: systemctl start tailscaled
+
+  stop:
+    - type: run
+      run: tailscale logout 2>/dev/null || true
+
+  health:
+    interval: 1m
+    steps:
+      - type: run
+        run: tailscale status
